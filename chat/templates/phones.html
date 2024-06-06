@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact List</title>
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background-color: #fff;
+            border-radius: 5px;
+            margin: 5px 0;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        li:hover {
+            background-color: #f9f9f9;
+        }
+
+        li::before {
+            content: "\2022";
+            color: #999;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .contact {
+            font-weight: bold;
+        }
+
+        .phone {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+     <h1>Contact List</h1>
+    <ul>
+        {% for contact in contacts %}
+            <li>
+                <span class="contact">{{ contact.first_name }} {{ contact.last_name }}</span> -
+                <span class="phone">{{ contact.phone_number }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+  <script>
+        // Create a new WebSocket connection
+        const phoneSocket = new WebSocket('ws://127.0.0.1:8000/ws/phones/');
+
+        // Handle messages received from the server
+        phoneSocket.onmessage = function(event) {
+            // Parse the received data as JSON
+            const data = JSON.parse(event.data);
+            // Extract the phone number from the data
+            const phoneNumber = data['phone_number'];
+
+            // Process the received phone number
+        };
+
+        // Log when the WebSocket connection is opened
+        phoneSocket.onopen = function() {
+            console.log('WebSocket connection established.');
+        };
+
+        // Log when the WebSocket connection is closed
+        phoneSocket.onclose = function() {
+            console.log('WebSocket connection closed.');
+        };
+
+        // Function to send a phone number to the server
+        function sendPhoneNumber(phoneNumber) {
+            // Create a JSON object with the phone number
+            const data = {
+                'phone_number': phoneNumber
+            };
+            // Send the JSON object as a string
+            phoneSocket.send(JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>

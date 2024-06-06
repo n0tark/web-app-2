@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 15px;
+            text-align: center;
+        }
+        .contact {
+            background-color: #fff;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Online Contact List</h1>
+    <h2>Online Users:</h2>
+    <ul id="onlineUsers"></ul>
+        <p id="noUsersMessage" style="display: none;">No users are currently online.</p>
+
+    <h2>All Contacts:</h2>
+    <ul>
+        {% for contact in contacts %}
+            <div class="contact">
+                {{ contact.phone_number }}
+            </div>
+        {% endfor %}
+    </ul>
+
+<script>
+        // Create a new WebSocket connection for online users
+        const onlineSocket = new WebSocket('ws://http://127.0.0.1:8000//ws/online/');
+
+        // Handle messages received from the server
+        onlineSocket.onmessage = function(event) {
+            const message = JSON.parse(event.data);
+            const onlineUsers = message['online_users'];
+            const onlineUsersList = document.getElementById('onlineUsers');
+            const noUsersMessage = document.getElementById('noUsersMessage');
+
+            onlineUsersList.innerHTML = ''; // Clear previous list
+            // Check if there are no online users
+            if (onlineUsers.length === 0) {
+                noUsersMessage.style.display = 'block'; // Show the "no users" message
+            } else {
+                noUsersMessage.style.display = 'none'; // Hide the "no users" message
+                // Loop through online users and add them to the list
+                onlineUsers.forEach(function(user) {
+                    const li = document.createElement('li');
+                    li.textContent = user.username;
+                    onlineUsersList.appendChild(li);
+                });
+            }
+        };
+
+        // Log when the WebSocket connection is opened
+        onlineSocket.onopen = function() {
+            console.log('WebSocket connection established.');
+        };
+
+        // Log when the WebSocket connection is closed
+        onlineSocket.onclose = function() {
+            console.log('WebSocket connection closed.');
+        };
+    </script>
+
+</body>
+</html>

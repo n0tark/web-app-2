@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redoc API Documentation</title>
+  <link rel="stylesheet" href="https://unpkg.com/redoc@latest/dist/redoc.min.css">
+</head>
+<body>
+  <div id="redoc"></div>
+  <script src="https://unpkg.com/redoc@latest/dist/redoc.min.js"></script>
+  <script>
+    Redoc.init({
+      specUrl: '/api/docs/schema/',
+    }, document.getElementById('redoc'));
+  </script>
+</body>
+</html>
